@@ -15,15 +15,20 @@ export function getList() {
 }
 
 export function create(values) {
-    axios.post(`${BASE_URL}/billingCycles`, values)
-      .then(resp => {
-        toastr.success('Sucesso', 'Operação Realizada com Sucesso')
-      })
-      .catch(e => {
-          e.response.data.errors.forEach(error => toastr.error('Erro', error))
-      })
-    return {
-      type: 'TEMP'
+    return dispatch => {
+      axios.post(`${BASE_URL}/billingCycles`, values)
+        .then(resp => {
+          toastr.success('Sucesso', 'Operação Realizada com Sucesso')
+            dispatch([
+              resetForm('billingCycleForm'),
+              getList(),
+              selectTab('tabList'),
+              showTabs('tabList', 'tabCreate')
+            ])
+        })
+        .catch(e => {
+            e.response.data.errors.forEach(error => toastr.error('Erro', error))
+        })
     }
 }
 
